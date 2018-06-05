@@ -72,11 +72,34 @@ std::vector<Point> createRandomPoints(int n)
 {
 	std::vector<Point> tmp;
 
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < n; i++)
 	{
 		tmp.push_back(Point(RandomFloat(-500,500), RandomFloat(-500, 500), RandomFloat(-500, 500), 0, 0, 0));
 		
 	}
+	return tmp;
+}
+std::vector<Point> createCube()
+{
+	std::vector<Point> tmp;
+
+	tmp.push_back(Point(0, 0, 0));
+	tmp.push_back(Point(100, 0, 0));
+	tmp.push_back(Point(0, 100, 0));
+	tmp.push_back(Point(0, 0, 100));
+	tmp.push_back(Point(100, 100, 0));
+	tmp.push_back(Point(100, 100, 100));
+	tmp.push_back(Point(0, 100, 100));
+	tmp.push_back(Point(100, 0, 100));
+	return tmp;
+}
+std::vector<Point> createPlane()
+{
+	std::vector<Point> tmp;
+
+	tmp.push_back(Point(0, 0, 0));
+	tmp.push_back(Point(100, 0, 0));
+	tmp.push_back(Point(100, 100, 0));
 	return tmp;
 }
 

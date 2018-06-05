@@ -3,6 +3,7 @@
 #include "Camera.hpp"
 #include "Controller.hpp"
 #include "EnvInc.hpp"
+#include "Butterfly.hpp"
 #ifdef _MSC_VER
 #pragma comment(lib, "opengl32.lib")
 #include <windows.h>
@@ -86,6 +87,66 @@ float * structToTabColor(std::vector<Point> newPoints, std::vector<Colore> c)
 
 
 
+Graph* CreatePlaneGraph()
+{
+	Graph* graph = new Graph();
+
+	std::vector<Point> tmp;
+
+	tmp.push_back(Point(0, 0, 0));
+	tmp.push_back(Point(100, 0, 0));
+	tmp.push_back(Point(0, 100, 0));
+	tmp.push_back(Point(100, 100, 0));
+
+	std::vector<Summit*> *summits = new std::vector<Summit*>({
+		new Summit(tmp.at(0)),
+		new Summit(tmp.at(1)),
+		new Summit(tmp.at(2)),
+		new Summit(tmp.at(3))
+	});
+
+	graph->setSummitList(summits);
+
+	std::vector<Edge*>* edges = new std::vector<Edge*>({
+		new Edge(new std::vector<Summit*>({ summits->at(0), summits->at(1) })),
+		new Edge(new std::vector<Summit*>({ summits->at(0), summits->at(2) })),
+		new Edge(new std::vector<Summit*>({ summits->at(1), summits->at(2) })),
+		new Edge(new std::vector<Summit*>({ summits->at(2), summits->at(3) })),
+		new Edge(new std::vector<Summit*>({ summits->at(1), summits->at(3) }))
+	});
+
+	graph->setEdgeList(edges);
+
+	summits->at(0)->setEdgesConnected(new std::vector<Edge*>({ edges->at(0), edges->at(1) }));
+	summits->at(1)->setEdgesConnected(new std::vector<Edge*>({ edges->at(0), edges->at(2), edges->at(4) }));
+	summits->at(2)->setEdgesConnected(new std::vector<Edge*>({ edges->at(1), edges->at(2), edges->at(3) }));
+	summits->at(3)->setEdgesConnected(new std::vector<Edge*>({ edges->at(3), edges->at(4) }));
+
+	std::vector<Face*>* faces = new std::vector<Face*>({
+		new Face(
+		new std::vector<Summit*>({ summits->at(0) , summits->at(1) , summits->at(2) }),
+			new std::vector<Edge*>({ edges->at(0), edges->at(1), edges->at(2) })),
+		new Face(
+			new std::vector<Summit*>({ summits->at(3) , summits->at(1) , summits->at(2) }),
+			new std::vector<Edge*>({ edges->at(2), edges->at(3), edges->at(4) }))
+	});
+
+	graph->setFaceList(faces);
+
+	summits->at(0)->setFacesConnected(new std::vector<Face*>({ faces->at(0) }));
+	summits->at(1)->setFacesConnected(new std::vector<Face*>({ faces->at(0), faces->at(1) }));
+	summits->at(2)->setFacesConnected(new std::vector<Face*>({ faces->at(0), faces->at(1) }));
+	summits->at(3)->setFacesConnected(new std::vector<Face*>({ faces->at(1) }));
+
+	edges->at(0)->setFacesConnected(new std::vector<Face*>({ faces->at(0) }));
+	edges->at(1)->setFacesConnected(new std::vector<Face*>({ faces->at(0) }));
+	edges->at(2)->setFacesConnected(new std::vector<Face*>({ faces->at(0), faces->at(1) }));
+	edges->at(3)->setFacesConnected(new std::vector<Face*>({ faces->at(1) }));
+	edges->at(4)->setFacesConnected(new std::vector<Face*>({ faces->at(1) }));
+
+	return graph;
+}
+
 
 bool Initialize()
 {
@@ -94,21 +155,30 @@ bool Initialize()
 	colore[2] = 1.0;
 	colore[3] = 1.0;
 
-	std::vector<Point> centerPoints3D = createRandomPoints(10);
+	//std::vector<Point> centerPoints3D = createRandomPoints(8);
+	std::vector<Point> centerPoints3D = createCube();
+	//std::vector<Point> centerPoints3D = createPlane();
 
 	Graph * tmpGraph = new Graph();
 	EnvInc testEnv = *new EnvInc(tmpGraph,centerPoints3D);
 	testEnv.initializeGraph();
 	testEnv.algo();
-	tmpFace = testEnv.getGraph()->getFaceList();
+	Graph::duplicateGraph(*testEnv.getGraph());
 
+	//Graph* tmpGraph = CreatePlaneGraph();
+
+	Butterfly butterfly = *new Butterfly(tmpGraph);
+	butterfly.Subdivise();
+
+	//tmpFace = tmpGraph->getFaceList();
+	tmpFace = testEnv.getGraph()->getFaceList();
 	for (int i = 0; i < tmpFace->size(); i++)
 	{
-		tmpVectorPoints.push_back(tmpFace->at(i)->getPoints()[0]);
+		tmpVectorPoints.push_back(tmpFace->at(i)->getSummitsConnected()->at(0)->getPoint());
 		col.push_back(tmpFace->at(i)->getColor());
-		tmpVectorPoints.push_back(tmpFace->at(i)->getPoints()[1]);
+		tmpVectorPoints.push_back(tmpFace->at(i)->getSummitsConnected()->at(1)->getPoint());
 		col.push_back(tmpFace->at(i)->getColor());
-		tmpVectorPoints.push_back(tmpFace->at(i)->getPoints()[2]);
+		tmpVectorPoints.push_back(tmpFace->at(i)->getSummitsConnected()->at(2)->getPoint());
 		col.push_back(tmpFace->at(i)->getColor());
 
 	}
