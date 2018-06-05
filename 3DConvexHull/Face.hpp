@@ -16,6 +16,7 @@ private:
 
 	std::vector<Summit*> *summitsConnected;
 	std::vector<Edge*> *edgesConnected;
+	Summit* barycenter;
 
 public:
 	Face() {
@@ -75,7 +76,13 @@ public:
 		points[ind] = p;
 	}
 
+	Summit* GetBarycenter()
+	{
+		return barycenter;
+	}
 
-
-
+	void SetBarycenter(Summit* b)
+	{
+		barycenter = b;
+	}
 };
