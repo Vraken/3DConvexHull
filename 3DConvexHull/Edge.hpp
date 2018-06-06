@@ -15,6 +15,7 @@ private:
 	std::vector<Face*> * facesConnected = new std::vector<Face*>();
 	Colore color;
 	std::vector<Point> points;
+	Summit* edgePoint;
 
 public:
 	Edge() {
@@ -71,6 +72,16 @@ public:
 	void setPoints(const std::vector<Point> & p)
 	{
 		points = p;
+	}
+
+	Summit* GetEdgePoint()
+	{
+		return edgePoint;
+	}
+
+	void SetEdgePoint(Summit* s)
+	{
+		edgePoint = s;
 	}
 
 };
