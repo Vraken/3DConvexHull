@@ -44,6 +44,9 @@ float colore[4];
 std::vector<Face*> *tmpFace = new std::vector<Face*>();
 std::vector<Colore> col;
 
+Graph * tmpGraph = new Graph();
+Butterfly butterfly = *new Butterfly(tmpGraph);
+
 float * structToTabColor(std::vector<Point> newPoints, std::vector<Colore> c)
 {
 	float* tabP = new float[newPoints.size() * 9];
@@ -96,7 +99,7 @@ Graph* CreatePlaneGraph()
 	tmp.push_back(Point(0, 0, 0));
 	tmp.push_back(Point(100, 0, 0));
 	tmp.push_back(Point(0, 100, 0));
-	tmp.push_back(Point(100, 100, 0));
+	tmp.push_back(Point(100, 100, 50));
 
 	std::vector<Summit*> *summits = new std::vector<Summit*>({
 		new Summit(tmp.at(0)),
@@ -147,6 +150,96 @@ Graph* CreatePlaneGraph()
 	return graph;
 }
 
+void SpecialInput(int key, int x, int y)
+{
+	switch (key)
+	{
+	case GLUT_KEY_UP:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		break;
+	case GLUT_KEY_DOWN:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		break;
+	case GLUT_KEY_RIGHT:
+		butterfly.Subdivise();
+
+		tmpFace = tmpGraph->getFaceList();
+
+		tmpVectorPoints.clear();
+		for (int i = 0; i < tmpFace->size(); i++)
+		{
+			tmpVectorPoints.push_back(tmpFace->at(i)->getSummitsConnected()->at(0)->getPoint());
+			col.push_back(tmpFace->at(i)->getColor());
+			tmpVectorPoints.push_back(tmpFace->at(i)->getSummitsConnected()->at(1)->getPoint());
+			col.push_back(tmpFace->at(i)->getColor());
+			tmpVectorPoints.push_back(tmpFace->at(i)->getSummitsConnected()->at(2)->getPoint());
+			col.push_back(tmpFace->at(i)->getColor());
+		}
+		std::vector<Point> centerPoints3D;
+		centerPoints3D = tmpVectorPoints;
+		std::vector<Colore> tmpColore;
+
+		p3D = transformPointsToCube(centerPoints3D);
+		for (int i = 0; i < p3D.size(); i++)
+		{
+			tmpColore.push_back(Colore(red));
+		}
+
+		tabPoints = structToTabColor(p3D, tmpColore);
+
+		indi = createInd(centerPoints3D.size() * 24);
+		indTmp = createInd(tmpVectorPoints.size());
+		tmpPoints = structToTabColor(tmpVectorPoints, col);
+
+		glewInit();
+		g_BasicShader.LoadVertexShader("basic.vs");
+		g_BasicShader.LoadFragmentShader("basic.fs");
+		g_BasicShader.CreateProgram();
+
+		glGenTextures(1, &TexObj);
+		glBindTexture(GL_TEXTURE_2D, TexObj);
+		int w, h, c; //largeur, hauteur et # de composantes du fichier
+
+					 //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); //GL_NEAREST)
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		glGenVertexArrays(1, &VBO0); // Créer le VAO
+		glBindVertexArray(VBO0); // Lier le VAO pour l'utiliser
+		glEnableVertexAttribArray(0);
+
+
+		//glGenBuffers(1, &VBO0);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO0);
+		glBufferData(GL_ARRAY_BUFFER, p3D.size() * 9 * sizeof(float), tabPoints, GL_STATIC_DRAW);
+		//---
+		glGenVertexArrays(1, &VBO1); // Créer le VAO
+		glBindVertexArray(VBO1); // Lier le VAO pour l'utiliser
+		glEnableVertexAttribArray(0);
+
+
+		//glGenBuffers(1, &VBO0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO1);
+		glBufferData(GL_ARRAY_BUFFER, tmpVectorPoints.size() * 9 * sizeof(float), tmpPoints, GL_STATIC_DRAW);
+
+		// rendu indexe
+		glGenBuffers(1, &IBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, p3D.size() * sizeof(GLushort), indi, GL_STATIC_DRAW);
+		glGenBuffers(1, &IBO1);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO1);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, tmpVectorPoints.size() * sizeof(GLushort), indTmp, GL_STATIC_DRAW);
+
+		// le fait de specifier 0 comme BO desactive l'usage des BOs
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		break;
+	}
+	glutPostRedisplay();
+}
+
+
 
 bool Initialize()
 {
@@ -156,21 +249,15 @@ bool Initialize()
 	colore[3] = 1.0;
 
 	//std::vector<Point> centerPoints3D = createRandomPoints(8);
-	std::vector<Point> centerPoints3D = createCube();
+	//std::vector<Point> centerPoints3D = createCube();
+	std::vector<Point> centerPoints3D = createIcosaedre();
 	//std::vector<Point> centerPoints3D = createPlane();
 
-	Graph * tmpGraph = new Graph();
 	EnvInc testEnv = *new EnvInc(tmpGraph,centerPoints3D);
 	testEnv.initializeGraph();
 	testEnv.algo();
 	Graph::duplicateGraph(*testEnv.getGraph());
 
-	//Graph* tmpGraph = CreatePlaneGraph();
-
-	Butterfly butterfly = *new Butterfly(tmpGraph);
-	butterfly.Subdivise();
-
-	//tmpFace = tmpGraph->getFaceList();
 	tmpFace = testEnv.getGraph()->getFaceList();
 	for (int i = 0; i < tmpFace->size(); i++)
 	{

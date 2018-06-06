@@ -93,6 +93,27 @@ std::vector<Point> createCube()
 	tmp.push_back(Point(100, 0, 100));
 	return tmp;
 }
+std::vector<Point> createIcosaedre()
+{
+	std::vector<Point> centerPoints3D;
+
+	float X = 250.0f;
+	float Z = 250.0f;
+	centerPoints3D.push_back(Point{ -X + 0.05f, 0, Z + 0.05f });
+	centerPoints3D.push_back(Point{ X - 0.05f, 0.05f, Z });
+	centerPoints3D.push_back(Point{ -X, 0, -Z + 0.07f });
+	centerPoints3D.push_back(Point{ X + 0.1f, 0.2f, -Z });
+	centerPoints3D.push_back(Point{ 0, Z + 0.1f, X - 0.3f });
+	centerPoints3D.push_back(Point{ 0 + 0.05f, Z, -X + 0.02f });
+	centerPoints3D.push_back(Point{ 0 + 0.15f, -Z, X });
+	centerPoints3D.push_back(Point{ 0, -Z + 0.08f, -X });
+	centerPoints3D.push_back(Point{ Z + 0.25f, X, 0 });
+	centerPoints3D.push_back(Point{ -Z, X, 0 + 0.23f });
+	centerPoints3D.push_back(Point{ Z, -X + 0.5f, 0 });
+	centerPoints3D.push_back(Point{ -Z + 0.15f, -X, 0 });
+
+	return centerPoints3D;
+}
 std::vector<Point> createPlane()
 {
 	std::vector<Point> tmp;

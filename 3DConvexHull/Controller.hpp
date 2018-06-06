@@ -95,19 +95,3 @@ void mouse(int x, int y)
 	lastposY = y;
 
 }
-
-void SpecialInput(int key, int x, int y)
-{
-	switch (key)
-	{
-	case GLUT_KEY_UP:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		break;
-	case GLUT_KEY_DOWN:
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		break;
-
-	}
-	glutPostRedisplay();
-}
-
