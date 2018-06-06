@@ -72,6 +72,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <IncludePath>C:\Users\Anthony\Documents\Git Repository\SubdivKobbelt\libs\freeglut\include;C:\Users\Anthony\Documents\Git Repository\SubdivKobbelt\libs\glew-2.0.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Anthony\Documents\Git Repository\SubdivKobbelt\libs\freeglut\lib;C:\Users\Anthony\Documents\Git Repository\SubdivKobbelt\libs\glew-2.0.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -161,9 +164,9 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Maths pour l%27info\CleanRepo\3DConvexHull\3DConvexHull\Butterfly.hpp" />
     <ClInclude Include="..\Common\EsgiShader.h" />
     <ClInclude Include="..\common\mat4.h" />
+    <ClInclude Include="Butterfly.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Colore.hpp" />
     <ClInclude Include="Controller.hpp" />

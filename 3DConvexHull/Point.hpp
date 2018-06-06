@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-int sizeCube = 3;
+float sizeCube = 0.5f;
 
 struct Point {
 	float x;
