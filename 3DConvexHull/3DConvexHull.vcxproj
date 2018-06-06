@@ -161,7 +161,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Maths pour l%27info\CleanRepo\3DConvexHull\3DConvexHull\Butterfly.hpp" />
+    <ClInclude Include="..\..\..\Maths pour l%27info\3DConvexHull\3DConvexHull\Butterfly.hpp" />
     <ClInclude Include="..\Common\EsgiShader.h" />
     <ClInclude Include="..\common\mat4.h" />
     <ClInclude Include="Camera.hpp" />

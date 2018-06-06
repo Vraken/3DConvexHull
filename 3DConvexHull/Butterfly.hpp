@@ -35,7 +35,7 @@ public:
 		//Creation of new edges between previous points and edge vertexes
 		for (int i = 0; i < old_summits->size(); ++i)
 		{
-			float alpha = (4.0f - 2.0f * COS(2.0f * M_PI / (float)old_summits->at(i)->getEdgesConnected()->size())) / 9.0f;
+			float alpha = (4.0f - 2.0f * cos(2.0f * M_PI / (float)old_summits->at(i)->getEdgesConnected()->size())) / 9.0f;
 
 			float x = 0.0f, y = 0.0f, z = 0.0f;
 
@@ -85,7 +85,7 @@ public:
 			{
 				for (int k = 0; k < old_faces->at(i)->getEdgesConnected()->at(k)->getFacesConnected()->size(); ++k)
 				{
-					if (old_faces->at(i)->getEdgesConnected()->at(k)->getFacesConnected()->at(k)
+					if (old_faces->at(i)->getEdgesConnected()->at(j)->getFacesConnected()->at(k)
 						== old_faces->at(i))
 					{
 						continue;
@@ -94,7 +94,7 @@ public:
 					std::vector<Summit*> * summits = new std::vector<Summit*>(
 					{
 						old_faces->at(i)->GetBarycenter(),
-						old_faces->at(i)->getEdgesConnected()->at(k)->getFacesConnected()->at(k)->GetBarycenter()
+						old_faces->at(i)->getEdgesConnected()->at(j)->getFacesConnected()->at(k)->GetBarycenter()
 					});
 
 					Edge* new_edge = new Edge(summits);
@@ -104,7 +104,7 @@ public:
 						new_edges->push_back(new_edge);
 
 						old_faces->at(i)->GetBarycenter()->getEdgesConnected()->push_back(new_edge);
-						old_faces->at(i)->getEdgesConnected()->at(k)->getFacesConnected()->at(k)->GetBarycenter()->getEdgesConnected()->push_back(new_edge);
+						old_faces->at(i)->getEdgesConnected()->at(j)->getFacesConnected()->at(k)->GetBarycenter()->getEdgesConnected()->push_back(new_edge);
 					}
 				}				
 			}

@@ -169,6 +169,9 @@ bool Initialize()
 
 	Butterfly butterfly = *new Butterfly(tmpGraph);
 	butterfly.Subdivise();
+	butterfly.Subdivise();
+	butterfly.Subdivise();
+	butterfly.Subdivise();
 
 	//tmpFace = tmpGraph->getFaceList();
 	tmpFace = testEnv.getGraph()->getFaceList();
